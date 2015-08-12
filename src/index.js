@@ -1,19 +1,25 @@
 'use strict';
 
-var Location = function(initialPath, client, navigation) {
+var Location = function(client) {
 
-	this.m_currentPath = initialPath;
-	this.m_navigation = navigation;
+	this.m_client = client;
+	this.m_currentPath = '';
 	this.m_listeners = [];
 
 	var me = this;
-	client.onEvent('navigation.statechange', function(path) {
+
+	function handlePathChange(path) {
 		if(me.m_currentPath === path) {
 			return;
 		}
 		me.m_currentPath = path;
 		me.notifyChange('push');
+	}
+
+	this.callNavigation(function(navigation) {
+		navigation.get().then(handlePathChange);
 	});
+	this.m_client.onEvent('navigation.statechange', handlePathChange);
 
 };
 Location.prototype.addChangeListener = function(listener) {
@@ -25,13 +31,19 @@ Location.prototype.removeChangeListener = function(listener) {
 	});
 };
 Location.prototype.push = function(path) {
-	this.m_navigation.push(path);
+	this.callNavigation(function(navigation) {
+		navigation.push(path);
+	});
 };
 Location.prototype.replace = function(path) {
-	this.m_navigation.replace(path);
+	this.callNavigation(function(navigation) {
+		navigation.replace(path);
+	});
 };
 Location.prototype.pop = function() {
-	this.m_navigation.pop();
+	this.callNavigation(function(navigation) {
+		navigation.pop();
+	});
 };
 Location.prototype.getCurrentPath = function() {
 	return this.m_currentPath;
@@ -44,6 +56,12 @@ Location.prototype.notifyChange = function(type) {
 	};
 	this.m_listeners.forEach(function(listener) {
 		listener.call(me, change);
+	});
+};
+Location.prototype.callNavigation = function(func) {
+	var me = this;
+	this.m_client.getService('navigation', '0.1').then(function(navigation) {
+		func.call(me, navigation);
 	});
 };
 

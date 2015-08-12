@@ -7,31 +7,37 @@ chai.should();
 chai.use(require('sinon-chai'));
 
 function MockClient() {}
+MockClient.prototype.getService = function() {};
 MockClient.prototype.onEvent = function() {};
 
 function MockNavigation() {}
 MockNavigation.prototype.push = function() {};
 MockNavigation.prototype.replace = function() {};
 MockNavigation.prototype.pop = function() {};
-
-var initialPath = '/d2l/initial/path/';
+MockNavigation.prototype.get = function() {};
 
 describe('location', function() {
 
-	var location, client, onEvent, navigation, push, replace, pop;
+	var location, client, onEvent, push, replace, pop, callNavigation, navigation;
 
 	beforeEach(function() {
-		client = new MockClient();
-		onEvent = sinon.stub(client, 'onEvent');
+
+		clock = sinon.useFakeTimers();
+
 		navigation = new MockNavigation();
 		push = sinon.stub(navigation, 'push');
 		replace = sinon.stub(navigation, 'replace');
 		pop = sinon.stub(navigation, 'pop');
-		location = new Location(
-			initialPath,
-			client,
-			navigation
+
+		client = new MockClient();
+		onEvent = sinon.stub(client, 'onEvent');
+		sinon.stub(client, 'getService').returns(
+			new Promise(function(resolve) { resolve(navigation); })
 		);
+
+		location = new Location(client);
+		callNavigation = sinon.stub(location, 'callNavigation');
+
 	});
 
 	afterEach(function() {
@@ -39,6 +45,8 @@ describe('location', function() {
 		push.restore();
 		replace.restore();
 		pop.restore();
+		callNavigation.restore();
+		clock.restore();
 	});
 
 	describe('change listeners', function() {
@@ -84,7 +92,9 @@ describe('location', function() {
 		});
 
 		it('should not trigger change with same path', function() {
-			onEvent.args[0][1](initialPath);
+			var newPath = '/current/path/';
+			location.m_currentPath = newPath;
+			onEvent.args[0][1](newPath);
 			notifyChange.should.not.have.been.called;
 		});
 
@@ -103,9 +113,9 @@ describe('location', function() {
 
 	describe('getCurrentPath', function() {
 
-		it('should return initial path initially', function() {
+		it('should return empty string initially', function() {
 			var path = location.getCurrentPath();
-			expect(path).to.equal(initialPath);
+			expect(path).to.equal('');
 		});
 
 	});
@@ -115,17 +125,20 @@ describe('location', function() {
 		it('should proxy push to navigation', function() {
 			var path = 'push-path';
 			location.push(path);
+			callNavigation.args[0][0](navigation);
 			push.should.have.been.calledWith(path);
 		});
 
 		it('should proxy pop to navigation', function() {
 			location.pop();
+			callNavigation.args[0][0](navigation);
 			pop.should.have.been.calledOnce;
 		});
 
 		it('should proxy replace to navigation', function() {
 			var path = 'replace-path';
 			location.replace(path);
+			callNavigation.args[0][0](navigation);
 			replace.should.have.been.calledWith(path);
 		});
 
