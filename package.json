@@ -1,0 +1,40 @@
+{
+  "name": "react-router-ifrau-location",
+  "version": "0.0.1",
+  "description": "Custom react-router location to help with routing within an IFRAME-based free-range application",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "npm run lint:src && npm run lint:test",
+    "lint:src": "jshint src",
+    "lint:test": "jshint test",
+    "test:unit": "istanbul cover node_modules/mocha/bin/_mocha --",
+    "test": "npm run lint -s && npm run test:unit -s",
+    "report-coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Brightspace/react-router-ifrau-location.git"
+  },
+  "keywords": [
+    "d2l",
+    "frau",
+    "iframe",
+    "react",
+    "router"
+  ],
+  "author": "D2L Corporation",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Brightspace/react-router-ifrau-location/issues"
+  },
+  "homepage": "https://github.com/Brightspace/react-router-ifrau-location#readme",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "coveralls": "^2.11.3",
+    "istanbul": "^0.3.17",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "sinon": "^1.15.4",
+    "sinon-chai": "^2.8.0"
+  }
+}
