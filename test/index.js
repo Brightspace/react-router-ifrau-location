@@ -39,6 +39,7 @@ describe('location', function() {
 		push.restore();
 		replace.restore();
 		pop.restore();
+		// test
 	});
 
 	describe('change listeners', function() {
