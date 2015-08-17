@@ -1,6 +1,6 @@
 {
   "name": "react-router-ifrau-location",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Custom react-router location to help with routing within an IFRAME-based free-range application",
   "main": "src/index.js",
   "scripts": {
