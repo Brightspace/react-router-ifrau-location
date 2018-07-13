@@ -1,14 +1,14 @@
 language: node_js
 node_js:
-- '0.12'
+  - '0.12'
 sudo: false
 after_success:
-- npm run report-coverage
+  - npm run report-coverage
 deploy:
-  provider: npm
-  email: d2ltravisdeploy@d2l.com
-  api_key:
-    secure: VVCWIdH0RuquqYf88fE4CNkiM7NbMybhbvVt9jlRP6L7VXW//h6/NuiDHoumYgO8WpTKycJc5LSp3cxiPnzFAbEg/jgsgy5Aq8swJWnJWUDqFtVHz9U5RYVUBHD8dlpWPTTr6XEK6EcdpDk/L9o2X7qwDyfHN+UQZZzAbZ2xWGWOgSiBSyCOhrjdqH8cU5/Eb7rEAluXc8CjIGH8iti3uSEHilrgf2Q2YFVmTuQnnweTiAbIFxTkhE4dmqSkjK2ioH2Ip84UZW6l9cTWd+xWgAwRnBvG8L81do8q/kPCJ4cInlRHmqqCZxgrWSedqE52THNSuVn47Px9kEQ67R9Riw5mXM3lV82ZU9RtG5lW2TNhkcjxTlyjuuWTacb9JosY4UcbE9V8nM1BXgnQOHfh/KTbqOktkxgeK5StLrj98BRf2MvhhGSKSYK66Mpu5RYdr5oUDPWWtHSEaH40P5ctbJW9L9kJBGSA5E5+o4Y2IRmEJ+rI74vDAlYbE7QaqWpCyk24HYkfD3AivouzmLsrjXsU81DzwzLz0Bg/p7Ktr68Llo0fws8m/KT43GyS4vq5aAl4HsMJtARws8v+Al7qypW3rH9W2BbqaKYn7v8c6yHt4JhaMTRxFhns4FOR+A30AcKOqsToAlEpJH57c4nvfdv3Od3nrA9IWPFX68fcFrQ=
+  provider: script
+  script: echo "npm credentials were revoked on 2018-07-12. We regenerated many
+    credentials, but this repository had no changes in at least 18 months and
+    was skipped. Reconfigure npm deployments. -omsmith"; exit 1
   on:
     tags: true
     repo: Brightspace/react-router-ifrau-location
